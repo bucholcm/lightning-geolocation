@@ -1,0 +1,17 @@
+<project name="Salesforce Ant task" basedir="." xmlns:sf="antlib:com.salesforce">
+    
+    <property file="build.properties"/>
+
+    <target name="deployCode">
+        <sf:deploy username="${sfdc.username}" password="${sfdc.password}" serverurl="${sfdc.serverurl}" maxPoll="${sfdc.maxPoll}" deployRoot="${sfdc.deployRoot}"/>
+    </target>
+    
+    <target name="deployCodeCheckOnly">
+        <sf:deploy username="${sfdc.username}" password="${sfdc.password}" serverurl="${sfdc.serverurl}" maxPoll="${sfdc.maxPoll}" deployRoot="${sfdc.deployRoot}" rollbackOnError="true" checkOnly="true" runAllTests="true" logType="Profiling" />
+    </target>
+
+    <target name="retrieveAll">
+        <sf:retrieve username="${sfdc.username}" password="${sfdc.password}" serverurl="${sfdc.serverurl}" maxPoll="${sfdc.maxPoll}" retrieveTarget="${sfdc.deployRoot}" unpackaged="${sfdc.deployRoot}/package.xml" />
+    </target>
+    
+</project>

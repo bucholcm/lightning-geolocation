@@ -1,0 +1,12 @@
+
+*.sublime-project
+
+*.sublime-settings
+
+*.sublime-workspace
+
+build\.properties
+
+config/
+
+log\.log

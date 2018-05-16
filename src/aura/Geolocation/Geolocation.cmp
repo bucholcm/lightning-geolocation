@@ -1,0 +1,22 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <ltng:require styles="{!$Resource.leaflet + '/leaflet.css'}" scripts="{!$Resource.leaflet + '/leaflet.js'}"
+        afterScriptsLoaded="{!c.jsLoaded}" />
+    
+	<aura:attribute name="coords" type="Object" />
+    <aura:attribute name="map" type="Object" />
+    <aura:attribute name="loaded" type="Boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.coords}" action="{!c.handleCoordsChange}" />
+    
+    <lightning:card title="Location">
+        <div class="exampleHolder">
+        <aura:if isTrue="{! v.loaded }">
+            <aura:set attribute="else">
+                <lightning:spinner alternativeText="Locating" />
+            </aura:set>
+        </aura:if>
+    </div>
+        <div aura:id="map" style="width:90%; height: 200px;margin: auto;"></div>
+    </lightning:card>
+</aura:component>
