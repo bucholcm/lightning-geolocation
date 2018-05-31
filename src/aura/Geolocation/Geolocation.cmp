@@ -1,22 +1,31 @@
-<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
-    <ltng:require styles="{!$Resource.leaflet + '/leaflet.css'}" scripts="{!$Resource.leaflet + '/leaflet.js'}"
-        afterScriptsLoaded="{!c.jsLoaded}" />
+<aura:component controller="GeolocationController" implements="flexipage:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId" access="global" >
     
-	<aura:attribute name="coords" type="Object" />
+    <ltng:require styles="{!join(',', $Resource.LeafletMarkers + '/css/fontawesome-all.min.css', $Resource.LeafletMarkers + '/leaflet.awesome-markers.css', $Resource.leaflet + '/leaflet.css')}"
+    scripts="{!join(',', $Resource.leaflet + '/leaflet.js', $Resource.LeafletMarkers + '/leaflet.awesome-markers.min.js')}" afterScriptsLoaded="{!c.jsLoaded}" />
+    
+    <aura:attribute name="recordId" type="Id" />
     <aura:attribute name="map" type="Object" />
+    <aura:attribute name="distance" type="Double" />
+    <aura:attribute name="location" type="Object" />
+    <aura:attribute name="accountLocation" type="Object" />
+    <aura:attribute name="markers" type="List" access="private" />
+    <aura:attribute name="markersGroup" type="Object" access="private" />
     <aura:attribute name="loaded" type="Boolean" default="false" />
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler name="change" value="{!v.coords}" action="{!c.handleCoordsChange}" />
+    <aura:handler name="change" value="{!v.location}" action="{!c.handleCoordsChange}" />
     
-    <lightning:card title="Location">
-        <div class="exampleHolder">
+    <lightning:card title="">
+        <aura:if isTrue="{! !empty(v.distance) }">
+            <div class="slds-m-bottom_medium">
+                <span>You are <lightning:formattedNumber value="{!v.distance}" maximumFractionDigits="2"/> meters away from the destination.</span>
+            </div>
+        </aura:if>
         <aura:if isTrue="{! v.loaded }">
             <aura:set attribute="else">
                 <lightning:spinner alternativeText="Locating" />
             </aura:set>
         </aura:if>
-    </div>
-        <div aura:id="map" style="width:90%; height: 200px;margin: auto;"></div>
+        <div aura:id="map" class="map"></div>
     </lightning:card>
 </aura:component>

@@ -3,11 +3,11 @@
 		if (navigator.geolocation) {
   	    	navigator.geolocation.getCurrentPosition(success);
             	function success(position) {
-                 	component.set('v.coords', position.coords);
+                 	component.set('v.location', position.coords);
 				}
 		} else {
   			error('Geo Location is not supported');
-		}
+        }
     },
     jsLoaded: function(component, event, helper) {
         let map = L.map(component.find('map').getElement(), {zoomControl: true, tap: false}).setView([52, 21], 10);
@@ -17,9 +17,10 @@
               attribution: 'Tiles © maciek.in'
        }).addTo(map);
         component.set('v.map', map);
+        helper.getAccountLocation(component);
     },
 	handleCoordsChange : function(component, event, helper) {
-        component.set('v.loaded', true);
-        component.get('v.map').flyTo([event.getParam('value').latitude, event.getParam('value').longitude], 17);
+        const locateIcon = L.AwesomeMarkers.icon({icon: 'street-view', markerColor: 'blue', prefix: 'fa'});
+        helper.setMarkersGroup(component, event.getParam('value').latitude, event.getParam('value').longitude, locateIcon);
     }
 })
