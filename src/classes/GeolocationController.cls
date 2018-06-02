@@ -11,6 +11,14 @@ public with sharing class GeolocationController {
         }
         return null;
     }
+
+    @AuraEnabled
+    public static void saveEventLocation(Id recordId, String location) {
+        system.debug(location);
+        LocationWrapper userLocation = (LocationWrapper) JSON.deserialize(location, LocationWrapper.class);
+        Event e = new Event(Id = recordId, Location__Latitude__s = userLocation.lat, Location__Longitude__s = userLocation.lon);
+        update e;
+    }
     
     public class LocationWrapper {
         @AuraEnabled

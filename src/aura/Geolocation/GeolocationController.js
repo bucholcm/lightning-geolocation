@@ -6,7 +6,12 @@
                  	component.set('v.location', position.coords);
 				}
 		} else {
-  			error('Geo Location is not supported');
+            let resultsToast = $A.get('e.force:showToast');
+            resultsToast.setParams({
+                title: 'Error',
+                message: 'Geo Location is not supported by your device'
+            });
+            resultsToast.fire();
         }
     },
     jsLoaded: function(component, event, helper) {
@@ -17,10 +22,20 @@
               attribution: 'Tiles © maciek.in'
        }).addTo(map);
         component.set('v.map', map);
+        component.set('v.jsLoaded', true);
         helper.getAccountLocation(component);
     },
 	handleCoordsChange : function(component, event, helper) {
-        const locateIcon = L.AwesomeMarkers.icon({icon: 'street-view', markerColor: 'blue', prefix: 'fa'});
-        helper.setMarkersGroup(component, event.getParam('value').latitude, event.getParam('value').longitude, locateIcon);
+        if (component.get('v.jsLoaded')) {
+            const locateIcon = L.AwesomeMarkers.icon({icon: 'street-view', markerColor: 'blue', prefix: 'fa'});
+            helper.setMarkersGroup(component, event.getParam('value').latitude, event.getParam('value').longitude, locateIcon);
+        }
+    },
+    handleSave : function(component, event, helper) {
+        helper.saveEventLocation(component);
+    },
+    handleCancel : function(component, event, helper) {
+        let dismissActionPanel = $A.get('e.force:closeQuickAction');
+        dismissActionPanel.fire();
     }
 })

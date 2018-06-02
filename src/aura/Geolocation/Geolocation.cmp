@@ -1,4 +1,4 @@
-<aura:component controller="GeolocationController" implements="flexipage:availableForAllPageTypes,force:lightningQuickAction,force:hasRecordId" access="global" >
+<aura:component controller="GeolocationController" implements="flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" >
     
     <ltng:require styles="{!join(',', $Resource.LeafletMarkers + '/css/fontawesome-all.min.css', $Resource.LeafletMarkers + '/leaflet.awesome-markers.css', $Resource.leaflet + '/leaflet.css')}"
     scripts="{!join(',', $Resource.leaflet + '/leaflet.js', $Resource.LeafletMarkers + '/leaflet.awesome-markers.min.js')}" afterScriptsLoaded="{!c.jsLoaded}" />
@@ -11,14 +11,18 @@
     <aura:attribute name="markers" type="List" access="private" />
     <aura:attribute name="markersGroup" type="Object" access="private" />
     <aura:attribute name="loaded" type="Boolean" default="false" />
+    <aura:attribute name="jsLoaded" type="Boolean" default="false" />
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="change" value="{!v.location}" action="{!c.handleCoordsChange}" />
-    
+
+    <div class="slds-page-header" role="banner">
+        <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-left">Finish visit</h1>
+    </div>     
     <lightning:card title="">
         <aura:if isTrue="{! !empty(v.distance) }">
             <div class="slds-m-bottom_medium">
-                <span>You are <lightning:formattedNumber value="{!v.distance}" maximumFractionDigits="2"/> meters away from the destination.</span>
+                <span>You are <lightning:formattedNumber value="{!v.distance}" maximumFractionDigits="2"/> kilometers away from the destination.</span>
             </div>
         </aura:if>
         <aura:if isTrue="{! v.loaded }">
@@ -28,4 +32,8 @@
         </aura:if>
         <div aura:id="map" class="map"></div>
     </lightning:card>
+    <div style="text-align: right;">
+        <lightning:button label="Cancel" onclick="{!c.handleCancel}"/>
+        <lightning:button disabled="{!!v.loaded}" variant="brand" label="Save" onclick="{!c.handleSave}"/>
+    </div>
 </aura:component>

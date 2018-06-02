@@ -7,17 +7,46 @@
                 let state = response.getState();
                 if (state === 'SUCCESS') {
                     const accountLoc = JSON.parse(response.getReturnValue());
+                    console.log(response.getReturnValue());
                     component.set('v.accountLocation', accountLoc);
                     const locateIcon = L.AwesomeMarkers.icon({icon: 'building', markerColor: 'orange', prefix: 'fa'});
                     this.setMarkersGroup(component, accountLoc.lat, accountLoc.lon, locateIcon);
                     
                 } else {
-                    console.log('Problem getting account, response state: ' + state);
+                    let resultsToast = $A.get('e.force:showToast');
+                    resultsToast.setParams({
+                        title: 'Error',
+                        message: 'There was an error: ' + JSON.stringify(response.error)
+                    });
+                    resultsToast.fire();
                 }
             });
             $A.enqueueAction(action);
         }
-    }, 
+    },
+    saveEventLocation : function(component) {
+        let action = component.get('c.saveEventLocation');
+        if (action && component.get('v.recordId')) {
+            console.log({recordId: component.get('v.recordId'), location: JSON.stringify({lat: component.get('v.location').latitude, lon: component.get('v.location').longitude})});
+            action.setParams({recordId: component.get('v.recordId'), location: JSON.stringify({lat: component.get('v.location').latitude, lon: component.get('v.location').longitude})});
+            action.setCallback(this, function(response) {
+                let state = response.getState();
+                if (state === 'SUCCESS') {
+                    let dismissActionPanel = $A.get('e.force:closeQuickAction');
+                    dismissActionPanel.fire();
+                    $A.get('e.force:refreshView').fire();
+                } else {
+                    let resultsToast = $A.get('e.force:showToast');
+                    resultsToast.setParams({
+                        title: 'Error',
+                        message: 'There was an error: ' + JSON.stringify(response.error)
+                    });
+                    resultsToast.fire();
+                }
+            });
+            $A.enqueueAction(action);
+        }
+    },
     setMarkersGroup : function(component, lat, lon, icon) {
         component.get('v.markers').push({lat: lat, lon: lon});
         if (!component.get('v.markersGroup')) {

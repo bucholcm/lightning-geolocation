@@ -9,6 +9,10 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>Event</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>LeafletMarkers</members>
         <members>leaflet</members>
         <name>StaticResource</name>
