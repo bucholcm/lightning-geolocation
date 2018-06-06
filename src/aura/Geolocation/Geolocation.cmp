@@ -21,7 +21,7 @@
     </div>     
     <lightning:card title="">
         <aura:if isTrue="{! !empty(v.distance) }">
-            <div class="slds-m-bottom_medium">
+            <div class="slds-m-bottom_medium slds-m-left_small slds-m-right_small slds-wrap">
                 <span>You are <lightning:formattedNumber value="{!v.distance}" maximumFractionDigits="2"/> kilometers away from the destination.</span>
             </div>
         </aura:if>
@@ -32,7 +32,7 @@
         </aura:if>
         <div aura:id="map" class="map"></div>
     </lightning:card>
-    <div style="text-align: right;">
+    <div class="slds-m-top_large slds-text-align_right" >
         <lightning:button label="Cancel" onclick="{!c.handleCancel}"/>
         <lightning:button disabled="{!!v.loaded}" variant="brand" label="Save" onclick="{!c.handleSave}"/>
     </div>
